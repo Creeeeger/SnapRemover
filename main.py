@@ -1,7 +1,12 @@
 import os
 import json
+import webbrowser
+import pyautogui
+import time
 import tkinter as tk
 from tkinter import filedialog
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 
 
 def select_file():
@@ -60,13 +65,13 @@ def extract_data_from_file(file_name, selection):
 
 def menu():
     while True:
-        print("What to do now?:\n1. Remove these entries\n2. Exit")
+        print("What to do now?:\n1. Remove these entries\n2. Un save messages\n3. Delete messages\n4. Exit")
         try:
             selection = int(input())
-            if selection in [1, 2]:
+            if selection in [1, 2, 3, 4]:
                 return selection
             else:
-                print("Invalid input. Please enter 1 or 2.")
+                print("Invalid input. Please enter 1, 2, 3 or 4.")
         except ValueError:
             print("Invalid input. Please enter a number.")
 
@@ -81,9 +86,36 @@ def remove_entries():
         print("Operation cancelled. Exiting.")
         exit(0)
 
+
+def unsaved_messages(name):
+    confirmation = input("Are you sure you want to start removing messages? (y/n): ")
+    if confirmation.lower() == "y":
+        print("Starting un saving messages for user: " + name)
+        url = "https://web.snapchat.com"  # Open Snapchat web
+        webbrowser.open(url)
+        time.sleep(10)  # Wait for the page to load
+        # Additional logic to remove messages can be added here
+    else:
+        print("Operation cancelled. Exiting.")
+        exit(0)
+
+
+def delete_messages(name):
+    # Implement the functionality to remove entries here
+    confirmation = input("Are you sure you want to delete all messages? (y/n): ")
+    if confirmation.lower() == "y":
+        print("Starting deleting messages for user: " + name)
+        url = "https://web.snapchat.com"  # Open Snapchat web
+        webbrowser.open(url)
+        time.sleep(10)  # Wait for the page to load
+        # Additional logic to deleting messages can be added here
+    else:
+        print("Operation cancelled. Exiting.")
+        exit(0)
+
+
 print("Select friends.json from your downloaded data: ")
 file_name = select_file()
-# file_name = "friends.json"
 
 check_file_existence(file_name)  # check for existence
 entries = get_entries(file_name)  # entries are the data where the entries are stored
@@ -99,7 +131,14 @@ menu_selection = menu()  # get the menu selection
 if menu_selection == 1:
     remove_entries()
 elif menu_selection == 2:
+    num = int(input("Enter the number of the friends you want to un save messages: "))
+    name = usernames[num - 1]
+    print("Messages get removed from " + name)
+    unsave_messages(name)
+elif menu_selection == 3:
+    num = int(input("Enter the number of the friends you want to delete messages: "))
+    name = usernames[num - 1]
+    print("Messages get deleted from " + name)
+    delete_messages(name)
+elif menu_selection == 4:
     exit(0)
-
-# for entry in usernames:
-#    print(entry)
